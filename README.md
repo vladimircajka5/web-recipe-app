@@ -172,3 +172,82 @@ After completing the setup, verify that:
 - Spring Boot backend starts on port `8080`.
 - Angular frontend starts on port `4200`.
 - Angular production build completes successfully.
+
+
+
+
+
+
+## Backend Persistence and Sample Data
+
+The Recipes backend uses Spring Boot, Spring Data JPA, Hibernate, and PostgreSQL.
+
+### Database configuration
+
+The application connects to a local PostgreSQL database:
+
+- Database: `recipes_db`
+- Username: `recipes_user`
+- Port: `5432`
+
+The database password is provided through the `DB_PASSWORD` environment variable.
+
+In IntelliJ IDEA, configure this variable under **Run → Edit Configurations → Environment variables**.
+
+Database credentials must not be committed to Git.
+
+Hibernate uses `spring.jpa.hibernate.ddl-auto=update` to create and update database tables during local development.
+
+### Sample data
+
+Sample data is available in:
+
+`backend/recipes/src/main/resources/db/seed.sql`
+
+To initialize the sample data:
+
+1. Start the PostgreSQL server.
+2. Run the Spring Boot application once to create the database tables.
+3. Open `recipes_db` in pgAdmin Query Tool.
+4. Execute `seed.sql`.
+
+The script inserts one demo user (`demo_chef`), five recipes, meal types, dish types, dietary types, ingredient categories, and allergens.
+
+The script can be executed multiple times without duplicating the provided sample records in normal sequential use.
+
+Sample data is not loaded automatically during application startup.
+
+### REST API
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/users/{id}` | Get a user profile and published recipe count |
+| GET | `/api/users/{id}/recipes` | Get recipes published by a user |
+| GET | `/api/recipes` | Get all recipes |
+| GET | `/api/recipes/{id}` | Get a recipe by ID |
+| GET | `/api/meal-types` | Get all meal types |
+| GET | `/api/dish-types` | Get all dish types |
+| GET | `/api/dietary-types` | Get all dietary types |
+| GET | `/api/ingredient-categories` | Get all ingredient categories |
+| GET | `/api/allergens` | Get all allergens |
+
+All endpoints return JSON.
+
+The backend runs at `http://localhost:8080` by default.
+
+For requests targeting a nonexistent user or recipe, the API returns HTTP 404.
+
+### Testing
+
+Run the backend tests using the Maven Wrapper:
+
+```powershell
+cd backend/recipes
+.\mvnw.cmd clean test
+```
+
+Make sure PostgreSQL is running and `DB_PASSWORD` is available to the test process.
+
+REST endpoints can be tested manually using a browser, Postman, or curl.
+
+Authentication, recipe creation, and profile editing will be implemented in subsequent tasks.

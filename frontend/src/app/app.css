@@ -48,6 +48,7 @@
   justify-content: center;
   gap: 0.4rem;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .site-icon {

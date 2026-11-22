@@ -1,0 +1,53 @@
+<section class="profile-page">
+
+  <a class="back-link" routerLink="/">Back to recipes</a>
+
+  @if (profile; as user) {
+
+    <div class="profile-card">
+
+      <div class="profile-header">
+
+        <div class="profile-avatar">
+          @if (user.profilePictureUrl) {
+            <img [src]="user.profilePictureUrl" alt="Profile picture" />
+          } @else {
+            <span>{{ user.username.charAt(0).toUpperCase() }}</span>
+          }
+        </div>
+
+        <div class="profile-heading">
+          <p class="profile-label">User profile</p>
+          <h1>{{ user.username }}</h1>
+
+          <p class="profile-region"><strong>Region:</strong> {{ profile?.region }} </p>
+        </div>
+
+      </div>
+
+      <div class="profile-content">
+
+        <div class="profile-section">
+          <h2>About</h2>
+          <p>{{ user.biography || 'No biography provided.' }}</p>
+        </div>
+
+        <div class="profile-stats">
+          <span class="profile-count">{{ user.publishedRecipeCount }}</span>
+          <span>Published recipes</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <div class="profile-card">
+      <h1>User not found</h1>
+      <p>The requested user profile does not exist.</p>
+    </div>
+
+  }
+
+</section>

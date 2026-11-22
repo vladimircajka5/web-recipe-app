@@ -1,0 +1,75 @@
+.site-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav,
+.page {
+  box-sizing: border-box;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+.site-nav {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 auto;
+  grid-template-columns: repeat(6, minmax(9rem, 1fr));
+  padding: 0.75rem clamp(1rem, 4vw, 2rem);
+  list-style: none;
+  overflow-x: auto;
+}
+
+.page {
+  padding-block: clamp(1.5rem, 5vw, 3rem);
+}
+
+.site-link {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  color: #6d6262;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.site-icon {
+  flex-shrink: 0;
+  color: var(--color-accent);
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.site-link--account {
+  background: #f5e5e7;
+  color: #7d3440;
+}
+
+@media (hover: hover) {
+  .site-link:hover {
+    background-color: #f5e5e7;
+    color: #7d3440;
+  }
+
+  .site-link--account:hover {
+    background-color: #ead1d5;
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .site-link {
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .site-link:hover {
+    transform: translateY(-2px);
+  }
+}

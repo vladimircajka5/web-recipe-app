@@ -1,4 +1,5 @@
 .recipe-card {
+  box-sizing: border-box;
   height: 100%;
   overflow: hidden;
   border: 1px solid var(--color-border);
@@ -46,4 +47,33 @@
   background: #f5e5e7;
   color: #7d3440;
   font-size: 0.85rem;
+}
+
+.recipe-card-link {
+  display: block;
+  height: 100%;
+  border-radius: 1.125rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.recipe-card-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .recipe-card-link:hover {
+    box-shadow: 0 0.5rem 1.25rem rgb(41 37 37 / 12%);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .recipe-card-link {
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .recipe-card-link:hover {
+    transform: translateY(-3px);
+  }
 }

@@ -11,3 +11,9 @@ export interface RecipeCardData {
   mainPhotoUrl: string | null;
   averageRating: number | null;
 }
+
+export interface RecipeDetailData extends RecipeCardData {
+  description: string;
+  ingredients: readonly string[];
+  steps: readonly string[];
+}

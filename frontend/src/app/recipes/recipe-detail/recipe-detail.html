@@ -1,0 +1,32 @@
+<a class="back-link" routerLink="/">← Back to recipes</a>
+
+@if (recipe(); as item) {
+  <article class="recipe-detail">
+    @if (item.mainPhotoUrl; as photo) {
+      <img class="detail-photo" [src]="photo" alt="" />
+    }
+
+    <h1>{{ item.name }}</h1>
+    <p>By {{ item.authorName }}</p>
+    <p>{{ item.mealType }} · {{ item.dishType }} · {{ item.dietaryType }}</p>
+    <p>{{ item.preparationTimeMinutes }} min · {{ item.servings }} servings</p>
+    <p>{{ item.description }}</p>
+    <p><strong>Allergens:</strong> {{ item.allergens.join(', ') || 'None listed' }}</p>
+
+    <h2>Ingredients</h2>
+    <ul>
+      @for (ingredient of item.ingredients; track $index) {
+        <li>{{ ingredient }}</li>
+      }
+    </ul>
+
+    <h2>Preparation steps</h2>
+    <ol>
+      @for (step of item.steps; track $index) {
+        <li>{{ step }}</li>
+      }
+    </ol>
+  </article>
+} @else {
+  <h1>Recipe not found</h1>
+}

@@ -1,0 +1,30 @@
+@let item = recipe();
+
+<article class="recipe-card">
+  @if (item.mainPhotoUrl; as photo) {
+    <img class="recipe-photo" [src]="photo" alt="" />
+  } @else {
+    <div class="recipe-photo recipe-photo--empty">No photo available</div>
+  }
+
+  <div class="recipe-content">
+    <h2>{{ item.name }}</h2>
+    <p>By {{ item.authorName }}</p>
+
+    <ul class="recipe-tags" aria-label="Recipe categories">
+      <li>{{ item.mealType }}</li>
+      <li>{{ item.dishType }}</li>
+      <li>{{ item.dietaryType }}</li>
+    </ul>
+
+    <p>{{ item.preparationTimeMinutes }} min · {{ item.servings }} servings</p>
+    <p>
+      @if (item.averageRating !== null) {
+        Rating: {{ item.averageRating }} / 5
+      } @else {
+        Not yet rated
+      }
+    </p>
+    <p><strong>Allergens:</strong> {{ item.allergens.join(', ') || 'None listed' }}</p>
+  </div>
+</article>

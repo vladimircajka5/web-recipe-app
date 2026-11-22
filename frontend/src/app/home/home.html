@@ -1,1 +1,6 @@
 <h1>Discover recipes</h1>
+<section class="recipe-grid" aria-label="Recipes">
+  @for (recipe of recipes; track recipe.id) {
+    <app-recipe-card [recipe]="recipe" />
+  }
+</section>

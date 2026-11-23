@@ -1,6 +1,7 @@
 package com.cajkaisinovi.recipes.service.impl;
 
 import com.cajkaisinovi.recipes.domain.User;
+import com.cajkaisinovi.recipes.dto.UpdateUserProfileDto;
 import com.cajkaisinovi.recipes.dto.UserDto;
 import com.cajkaisinovi.recipes.repository.RecipeRepository;
 import com.cajkaisinovi.recipes.repository.UserRepository;
@@ -32,5 +33,28 @@ public class UserServiceImpl implements IUserService {
         // OK
         long recipeCount = this.recipeRepository.countByAuthorId(userId);
         return new UserDto(found.get(), recipeCount);
+    }
+
+    @Override
+    public UserDto updateProfile(Long userId, UpdateUserProfileDto dto) {
+
+        Optional<User> found = this.userRepository.findById(userId);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return null;
+        }
+
+        User user = found.get();
+
+        user.setProfilePictureUrl(dto.getProfilePictureUrl());
+        user.setRegion(dto.getRegion());
+        user.setBiography(dto.getBiography());
+
+        User saved = this.userRepository.save(user);
+
+        // OK
+        long recipeCount = this.recipeRepository.countByAuthorId(userId);
+        return new UserDto(saved, recipeCount);
     }
 }

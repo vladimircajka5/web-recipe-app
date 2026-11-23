@@ -18,12 +18,21 @@ public class RecipeController {
     private IRecipeService recipeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RecipeDto>> getAll() {
+    public ResponseEntity<List<RecipeDto>> getAll(
+    		@RequestParam(value = "sort", required = false) String sort) {
+    	
+    	if(sort == null) {
+    		List<RecipeDto> all = this.recipeService.getAll();
 
-        List<RecipeDto> all = this.recipeService.getAll();
-
-        // OK
-        return new ResponseEntity<>(all, HttpStatus.OK);
+            // OK
+            return new ResponseEntity<List<RecipeDto>>(all, HttpStatus.OK);
+    	}
+    	
+    	if("newest".equals(sort)) {
+    		return new ResponseEntity<List<RecipeDto>>(recipeService.getNewest(), HttpStatus.OK);
+    	}
+        
+    	return new ResponseEntity<List<RecipeDto>>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

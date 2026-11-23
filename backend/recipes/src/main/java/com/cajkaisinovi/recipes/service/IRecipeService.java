@@ -11,4 +11,6 @@ public interface IRecipeService {
     RecipeDto findById(Long recipeId);
 
     List<RecipeDto> findByAuthorId(Long userId);
+    
+    List<RecipeDto> getNewest();
 }

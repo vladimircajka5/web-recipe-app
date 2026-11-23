@@ -1,9 +1,11 @@
 package com.cajkaisinovi.recipes.controller;
 
 import com.cajkaisinovi.recipes.dto.RecipeDto;
+import com.cajkaisinovi.recipes.dto.UpdateUserProfileDto;
 import com.cajkaisinovi.recipes.dto.UserDto;
 import com.cajkaisinovi.recipes.service.IRecipeService;
 import com.cajkaisinovi.recipes.service.IUserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,5 +46,17 @@ public class UserController {
 
         // OK
         return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> updateProfile(@PathVariable("id") Long id, @Valid @RequestBody UpdateUserProfileDto dto) {
+
+        UserDto updated = this.userService.updateProfile(id, dto);
+
+        // NOT_FOUND
+        if (updated == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        // OK
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 }

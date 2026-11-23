@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RecipeService } from '../recipes/recipe.service';
 import { RecipeCard } from '../shared/recipe-card/recipe-card';
 
@@ -9,5 +9,17 @@ import { RecipeCard } from '../shared/recipe-card/recipe-card';
   templateUrl: './home.html',
 })
 export class Home {
-  protected readonly recipes = inject(RecipeService).recipes;
+  private readonly sampleRecipes = inject(RecipeService).recipes;
+
+  protected readonly feed = signal<'popular' | 'newest'>('popular');
+
+  protected readonly recipes = computed(() => {
+    if (this.feed() === 'newest') {
+      return [...this.sampleRecipes].sort((first, second) =>
+        second.creationDate.localeCompare(first.creationDate),
+      );
+    }
+
+    return this.sampleRecipes;
+  });
 }

@@ -13,6 +13,7 @@ export interface RecipeCardData {
 }
 
 export interface RecipeDetailData extends RecipeCardData {
+  creationDate: string;
   description: string;
   ingredients: readonly string[];
   steps: readonly string[];

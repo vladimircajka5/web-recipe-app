@@ -16,6 +16,7 @@ export class RecipeService {
       preparationTimeMinutes: 20,
       mainPhotoUrl: 'recipe_photos/banana_pancakes.jpg',
       averageRating: 4.5,
+      creationDate: '2026-09-15T12:00:00',
       description: 'Homemade pancakes with bananas',
       ingredients: ['2 ripe bananas', '2 eggs', '150 g wheat flour', '200 ml milk'],
       steps: [
@@ -36,6 +37,7 @@ export class RecipeService {
       preparationTimeMinutes: 25,
       mainPhotoUrl: 'recipe_photos/vegetable_pasta.jpg',
       averageRating: null,
+      creationDate: '2026-08-30T12:00:00',
       description: 'Pasta with fresh vegetables',
       ingredients: ['200 g pasta', '1 zucchini', '1 bell pepper', '1 tbsp olive oil'],
       steps: [
@@ -56,6 +58,7 @@ export class RecipeService {
       preparationTimeMinutes: 30,
       mainPhotoUrl: 'recipe_photos/tomato_soup.jpg',
       averageRating: null,
+      creationDate: '2026-08-10T12:00:00',
       description: 'Simple homemade tomato soup',
       ingredients: ['800 g canned tomatoes', '1 onion', '500 ml vegetable stock'],
       steps: [
@@ -76,6 +79,7 @@ export class RecipeService {
       preparationTimeMinutes: 45,
       mainPhotoUrl: 'recipe_photos/chicken_rice.jpg',
       averageRating: null,
+      creationDate: '2026-07-25T12:00:00',
       description: 'Chicken served with cooked rice',
       ingredients: ['300 g cooked chicken', '200 g rice', '1 tbsp olive oil'],
       steps: [
@@ -96,6 +100,7 @@ export class RecipeService {
       preparationTimeMinutes: 10,
       mainPhotoUrl: 'recipe_photos/fruit_salad.jpg',
       averageRating: null,
+      creationDate: '2026-09-04T12:00:00',
       description: 'Fresh mixed seasonal fruits',
       ingredients: ['2 apples', '1 banana', '150 g grapes', '1 tbsp lemon juice'],
       steps: [

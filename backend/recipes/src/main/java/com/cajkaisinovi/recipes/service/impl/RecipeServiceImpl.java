@@ -6,6 +6,7 @@ import com.cajkaisinovi.recipes.repository.RecipeRepository;
 import com.cajkaisinovi.recipes.repository.UserRepository;
 import com.cajkaisinovi.recipes.service.IRecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -65,5 +66,11 @@ public class RecipeServiceImpl implements IRecipeService {
         }
 
         return result;
+    }
+    
+    @Override
+    public List<RecipeDto> getNewest() {
+        Sort newestFirst = Sort.by(Sort.Direction.DESC, "creationDate", "id");
+        return convertToDtoList(recipeRepository.findAll(newestFirst));
     }
 }

@@ -27,7 +27,7 @@ export interface RecipeCardData {
   mealType: string;
   dishType: string;
   dietaryType: string;
-  allergens: readonly string[];
+  allergens: readonly string[] | null;
   servings: number;
   preparationTimeMinutes: number;
   mainPhotoUrl: string | null;

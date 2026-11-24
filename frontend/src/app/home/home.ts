@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import type { RecipeFeed } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/recipe.service';
 import { RecipeCard } from '../shared/recipe-card/recipe-card';
 
@@ -9,17 +10,16 @@ import { RecipeCard } from '../shared/recipe-card/recipe-card';
   templateUrl: './home.html',
 })
 export class Home {
-  private readonly sampleRecipes = inject(RecipeService).recipes;
+  private readonly recipeService = inject(RecipeService);
 
-  protected readonly feed = signal<'popular' | 'newest'>('popular');
+  protected readonly feed = signal<RecipeFeed>('popular');
+  protected readonly recipesRequest = this.recipeService.loadFeed(this.feed);
 
   protected readonly recipes = computed(() => {
-    if (this.feed() === 'newest') {
-      return [...this.sampleRecipes].sort((first, second) =>
-        second.creationDate.localeCompare(first.creationDate),
-      );
+    if (!this.recipesRequest.hasValue()) {
+      return [];
     }
 
-    return this.sampleRecipes;
+    return this.recipesRequest.value().map((dto) => this.recipeService.toRecipeDetail(dto));
   });
 }

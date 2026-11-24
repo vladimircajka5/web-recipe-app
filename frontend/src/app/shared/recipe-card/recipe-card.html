@@ -32,7 +32,10 @@
             Not yet rated
         }
         </p>
-        <p><strong>Allergens:</strong> {{ item.allergens.join(', ') || 'None listed' }}</p>
+        <p>
+          <strong>Allergens:</strong>
+          {{ item.allergens === null ? 'Information unavailable' : (item.allergens.join(', ') || 'None listed') }}
+        </p>
     </div>
     </article>
 </a>

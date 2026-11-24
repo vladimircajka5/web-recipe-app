@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", methods = RequestMethod.GET)
 @RequestMapping("/api/recipes")
 public class RecipeController {
 
@@ -18,12 +19,21 @@ public class RecipeController {
     private IRecipeService recipeService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RecipeDto>> getAll() {
-
-        List<RecipeDto> all = this.recipeService.getAll();
-
-        // OK
-        return new ResponseEntity<>(all, HttpStatus.OK);
+    public ResponseEntity<List<RecipeDto>> getAll(
+    		@RequestParam(value = "sort", required = false) String sort) {
+    	
+    	if(sort == null) {
+            return new ResponseEntity<List<RecipeDto>>(recipeService.getAll(), HttpStatus.OK);
+    	}
+    	
+    	if(sort.equals("newest")) {
+    		return new ResponseEntity<List<RecipeDto>>(recipeService.getNewest(), HttpStatus.OK);
+    	} 
+    	else if (sort.equals("popular")) {
+    		return new ResponseEntity<List<RecipeDto>>(recipeService.getPopular(), HttpStatus.OK);
+    	}
+        
+    	return new ResponseEntity<List<RecipeDto>>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

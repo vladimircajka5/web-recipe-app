@@ -1,108 +1,34 @@
-import { Service } from '@angular/core';
-import { RecipeDetailData } from './recipe.model';
+import { httpResource } from '@angular/common/http';
+import { Service, type Signal } from '@angular/core';
+import { environment } from '../../env/environment';
+import type { RecipeDetailData, RecipeDto, RecipeFeed } from './recipe.model';
 
 @Service()
 export class RecipeService {
-  readonly recipes: readonly RecipeDetailData[] = [
-    {
-      id: 1,
-      name: 'Banana Pancakes',
-      authorName: 'demo_chef',
-      mealType: 'Breakfast',
-      dishType: 'Dessert',
-      dietaryType: 'Vegetarian',
-      allergens: ['Wheat', 'Eggs', 'Milk'],
-      servings: 4,
-      preparationTimeMinutes: 20,
-      mainPhotoUrl: 'recipe_photos/banana_pancakes.jpg',
-      averageRating: 4.5,
-      description: 'Homemade pancakes with bananas',
-      ingredients: ['2 ripe bananas', '2 eggs', '150 g wheat flour', '200 ml milk'],
-      steps: [
-        'Mash the bananas and whisk them with the eggs and milk.',
-        'Stir in the flour to make a batter.',
-        'Cook small portions in a skillet until golden on both sides.',
-      ],
-    },
-    {
-      id: 2,
-      name: 'Vegetable Pasta',
-      authorName: 'demo_chef',
-      mealType: 'Dinner',
-      dishType: 'Main Course',
-      dietaryType: 'Vegetarian',
-      allergens: ['Wheat'],
-      servings: 2,
-      preparationTimeMinutes: 25,
-      mainPhotoUrl: 'recipe_photos/vegetable_pasta.jpg',
-      averageRating: null,
-      description: 'Pasta with fresh vegetables',
-      ingredients: ['200 g pasta', '1 zucchini', '1 bell pepper', '1 tbsp olive oil'],
-      steps: [
-        'Cook the pasta according to the package instructions.',
-        'Chop and sauté the vegetables in olive oil.',
-        'Drain the pasta and toss it with the vegetables.',
-      ],
-    },
-    {
-      id: 3,
-      name: 'Tomato Soup',
-      authorName: 'demo_chef',
-      mealType: 'Lunch',
-      dishType: 'Soup',
-      dietaryType: 'Vegan',
-      allergens: [],
-      servings: 4,
-      preparationTimeMinutes: 30,
-      mainPhotoUrl: 'recipe_photos/tomato_soup.jpg',
-      averageRating: null,
-      description: 'Simple homemade tomato soup',
-      ingredients: ['800 g canned tomatoes', '1 onion', '500 ml vegetable stock'],
-      steps: [
-        'Chop and sauté the onion.',
-        'Add the tomatoes and stock and simmer for 20 minutes.',
-        'Blend until smooth.',
-      ],
-    },
-    {
-      id: 4,
-      name: 'Chicken and Rice',
-      authorName: 'demo_chef',
-      mealType: 'Lunch',
-      dishType: 'Main Course',
-      dietaryType: 'Regular',
-      allergens: [],
-      servings: 3,
-      preparationTimeMinutes: 45,
-      mainPhotoUrl: 'recipe_photos/chicken_rice.jpg',
-      averageRating: null,
-      description: 'Chicken served with cooked rice',
-      ingredients: ['300 g cooked chicken', '200 g rice', '1 tbsp olive oil'],
-      steps: [
-        'Cook the rice according to the package instructions.',
-        'Slice the cooked chicken.',
-        'Serve the chicken over the rice with a drizzle of olive oil.',
-      ],
-    },
-    {
-      id: 5,
-      name: 'Fruit Salad',
-      authorName: 'demo_chef',
-      mealType: 'Snack',
-      dishType: 'Salad',
-      dietaryType: 'Vegan',
-      allergens: [],
-      servings: 2,
-      preparationTimeMinutes: 10,
-      mainPhotoUrl: 'recipe_photos/fruit_salad.jpg',
-      averageRating: null,
-      description: 'Fresh mixed seasonal fruits',
-      ingredients: ['2 apples', '1 banana', '150 g grapes', '1 tbsp lemon juice'],
-      steps: [
-        'Wash the apples and grapes, then peel the banana.',
-        'Cut the fruit into bite-sized pieces.',
-        'Toss with the lemon juice and serve.',
-      ],
-    },
-  ];
+  loadFeed(feed: Signal<RecipeFeed>) {
+    return httpResource<RecipeDto[]>(() => ({
+      url: environment.apiHost + '/api/recipes',
+      params: { sort: feed() },
+    }));
+  }
+
+  toRecipeDetail(dto: RecipeDto): RecipeDetailData {
+    return {
+      id: dto.id,
+      name: dto.name,
+      authorName: dto.authorUsername,
+      mealType: dto.mealTypeName,
+      dishType: dto.dishTypeName,
+      dietaryType: dto.dietaryTypeName,
+      servings: dto.servings,
+      preparationTimeMinutes: dto.preparationTime,
+      mainPhotoUrl: dto.mainPhotoUrl,
+      averageRating: dto.averageRating,
+      creationDate: dto.creationDate,
+      description: dto.description,
+      allergens: null,
+      ingredients: [],
+      steps: [],
+    };
+  }
 }

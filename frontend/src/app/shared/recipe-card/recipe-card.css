@@ -77,3 +77,8 @@
     transform: translateY(-3px);
   }
 }
+
+.recipe-published {
+  color: #6d6262;
+  font-size: 0.9rem;
+}

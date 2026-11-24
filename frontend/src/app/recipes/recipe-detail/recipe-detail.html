@@ -1,6 +1,13 @@
 <a class="back-link" routerLink="/">← Back to recipes</a>
 
-@if (recipe(); as item) {
+@if (recipeRequest.isLoading()) {
+  <p role="status">Loading recipe…</p>
+} @else if (notFound()) {
+  <h1>Recipe not found</h1>
+} @else if (recipeRequest.error()) {
+  <p role="alert">Couldn’t load this recipe.</p>
+  <button type="button" (click)="recipeRequest.reload()">Try again</button>
+} @else if (recipe(); as item) {
   <article class="recipe-detail">
     @if (item.mainPhotoUrl; as photo) {
       <img class="detail-photo" [src]="photo" alt="" />
@@ -11,12 +18,17 @@
     <p>{{ item.mealType }} · {{ item.dishType }} · {{ item.dietaryType }}</p>
     <p>{{ item.preparationTimeMinutes }} min · {{ item.servings }} servings</p>
     <p>{{ item.description }}</p>
-    <p><strong>Allergens:</strong> {{ item.allergens.join(', ') || 'None listed' }}</p>
+    <p>
+      <strong>Allergens:</strong>
+      {{ item.allergens === null ? 'Information unavailable' : (item.allergens.join(', ') || 'None listed') }}
+    </p>
 
     <h2>Ingredients</h2>
     <ul>
       @for (ingredient of item.ingredients; track $index) {
         <li>{{ ingredient }}</li>
+      } @empty {
+        <li>Ingredient information unavailable.</li>
       }
     </ul>
 
@@ -24,9 +36,9 @@
     <ol>
       @for (step of item.steps; track $index) {
         <li>{{ step }}</li>
+      } @empty {
+        <li>Preparation steps unavailable.</li>
       }
     </ol>
   </article>
-} @else {
-  <h1>Recipe not found</h1>
 }

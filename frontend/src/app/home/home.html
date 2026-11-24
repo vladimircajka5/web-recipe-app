@@ -1,6 +1,29 @@
 <h1>Discover recipes</h1>
-<section class="recipe-grid" aria-label="Recipes">
-  @for (recipe of recipes; track recipe.id) {
-    <app-recipe-card [recipe]="recipe" />
+
+<div class="feed-selector" role="group" aria-label="Recipe feed">
+  <button type="button" [attr.aria-pressed]="feed() === 'popular'" (click)="feed.set('popular')">
+    Popular
+  </button>
+  <button type="button" [attr.aria-pressed]="feed() === 'newest'" (click)="feed.set('newest')">
+    Newest
+  </button>
+</div>
+
+@if (recipesRequest.isLoading()) {
+  <p role="status">Loading recipes…</p>
+} @else if (recipesRequest.error()) {
+  <p role="alert">Couldn’t load recipes.</p>
+  <button type="button" (click)="recipesRequest.reload()">Try again</button>
+} @else if (recipes().length === 0) {
+  @if (feed() === 'popular') {
+    <p role="status">No recipes rated in the past month.</p>
+  } @else {
+    <p role="status">No recipes have been published yet.</p>
   }
-</section>
+} @else {
+  <section class="recipe-grid" aria-label="Recipes">
+    @for (recipe of recipes(); track recipe.id) {
+      <app-recipe-card [recipe]="recipe" [publishedAt]="recipe.creationDate" />
+    }
+  </section>
+}

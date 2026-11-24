@@ -12,6 +12,12 @@
         <h2>{{ item.name }}</h2>
         <p>By {{ item.authorName }}</p>
 
+        @if (publishedAt(); as date) {
+            <p class="recipe-published">
+                Published <time [attr.datetime]="date">{{ date | date: 'd MMM y' }}</time>
+            </p>
+        }
+
         <ul class="recipe-tags" aria-label="Recipe categories">
         <li>{{ item.mealType }}</li>
         <li>{{ item.dishType }}</li>
@@ -26,7 +32,10 @@
             Not yet rated
         }
         </p>
-        <p><strong>Allergens:</strong> {{ item.allergens.join(', ') || 'None listed' }}</p>
+        <p>
+          <strong>Allergens:</strong>
+          {{ item.allergens === null ? 'Information unavailable' : (item.allergens.join(', ') || 'None listed') }}
+        </p>
     </div>
     </article>
 </a>

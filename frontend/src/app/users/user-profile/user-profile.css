@@ -108,3 +108,15 @@
     align-self: stretch;
   }
 }
+
+
+.edit-profile-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.65rem 1.25rem;
+  background-color: var(--color-accent);
+  color: white;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+}

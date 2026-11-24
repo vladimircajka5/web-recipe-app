@@ -6,3 +6,9 @@ export interface UserProfileData {
   biography: string | null;
   publishedRecipeCount: number;
 }
+
+export interface UpdateUserProfileData {
+  profilePictureUrl: string | null;
+  region: string;
+  biography: string | null;
+}

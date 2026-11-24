@@ -1,0 +1,83 @@
+.edit-page {
+  max-width: 38rem;
+  margin-inline: auto;
+}
+
+.edit-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 2rem;
+}
+
+.edit-card h1 {
+  margin-top: 0;
+}
+
+.edit-username {
+  color: #6d6262;
+  margin-bottom: 2rem;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.edit-field label {
+  font-weight: 600;
+}
+
+.edit-field input,
+.edit-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font: inherit;
+  background: white;
+  color: var(--color-text);
+}
+
+.edit-field input:focus,
+.edit-field textarea:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.edit-error {
+  color: #a12637;
+  font-size: 0.9rem;
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.save-button {
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}

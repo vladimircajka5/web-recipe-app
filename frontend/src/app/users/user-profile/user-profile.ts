@@ -1,32 +1,33 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, computed, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { UserService } from '../user.service';
-import { UserProfileData } from '../user.model';
 
+// Podaci za prikaz stranice, ovde se povezuje
 @Component({
-  selector: 'app-user-profile',
-  imports: [RouterLink],
-  templateUrl: './user-profile.html',
-  styleUrl: './user-profile.css',
+  selector: 'app-user-profile',       // naziv za koriscenje u drugim sablonima
+  imports: [RouterLink],              // funkcionalnosti i komponente koje ovaj sablon koristi
+  templateUrl: './user-profile.html', // html veza
+  styleUrl: './user-profile.css',     // css veza
 })
 export class UserProfile {
 
-  private readonly route = inject(ActivatedRoute);
   private readonly userService = inject(UserService);
 
-  protected profile: UserProfileData | null = null;
+  // input - ulazni signal komponente, dobija ga spolja
+  // required - input je obavezan
+  // <string> - bice string
+  readonly id = input.required<string>();
 
-  constructor() {
-    this.route.paramMap.subscribe((params) => {
+  // Veza komponente i servisa
+  protected readonly profile = this.userService.loadProfile(this.id);
 
-      const id = Number(params.get('id'));
-
-      if (Number.isInteger(id) && id > 0) {
-        this.profile = this.userService.getById(id);
-      } else {
-        this.profile = null;
-      }
-    });
-  }
+  // computed automatski menja vrednost kada se promeni signal
+  // ne racumano je rucno, nego se odredjuje na osnovu postojeceg HTTP resursa
+  protected readonly notFound = computed(() => {
+    const error = this.profile.error();
+    return error instanceof HttpErrorResponse && error.status === 404;
+  });
 }

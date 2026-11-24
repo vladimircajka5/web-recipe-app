@@ -2,7 +2,31 @@
 
   <a class="back-link" routerLink="/">Back to recipes</a>
 
-  @if (profile; as user) {
+  <!-- Vraca true dok se ucitavaju podaci-->
+  @if (profile.isLoading()) {
+
+    <p role="status">Loading user profile...</p>
+
+    <!-- NotFound ako ga ne nadje-->
+  } @else if (notFound()) {
+
+    <div class="profile-card">
+      <h1>User not found</h1>
+      <p>The requested user profile does not exist.</p>
+    </div>
+
+    <!-- Ako je neka druga greska, prikaze poruku i dugme za ponovno ucitavanje-->
+  } @else if (profile.error()) {
+
+    <div class="profile-card">
+      <h1>Could not load user profile</h1>
+      <p role="alert">The request failed. Please try again.</p>
+      <!-- Na klik se ponovo poziva HTTP ucitavanje-->
+      <button type="button" (click)="profile.reload()">Try again</button>
+    </div>
+
+    <!-- Konacno ako je sve ispravno-->
+  } @else if (profile.value(); as user) {
 
     <div class="profile-card">
 
@@ -10,8 +34,10 @@
 
         <div class="profile-avatar">
           @if (user.profilePictureUrl) {
+            <!-- [] je povezivanje svojstva(property binding)-->
             <img [src]="user.profilePictureUrl" alt="Profile picture" />
           } @else {
+            <!-- Ako nema vrednosti pokazuje prvo slovo korisnickog imena-->
             <span>{{ user.username.charAt(0).toUpperCase() }}</span>
           }
         </div>
@@ -19,8 +45,9 @@
         <div class="profile-heading">
           <p class="profile-label">User profile</p>
           <h1>{{ user.username }}</h1>
-
-          <p class="profile-region"><strong>Region:</strong> {{ profile?.region }} </p>
+          <p class="profile-region">
+            <strong>Region:</strong> {{ user.region }}
+          </p>
         </div>
 
       </div>
@@ -44,8 +71,7 @@
   } @else {
 
     <div class="profile-card">
-      <h1>User not found</h1>
-      <p>The requested user profile does not exist.</p>
+      <h1>No profile data available</h1>
     </div>
 
   }

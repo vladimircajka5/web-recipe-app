@@ -1,0 +1,103 @@
+<section class="edit-page">
+
+  @if (profile.isLoading()) {
+
+    <p>Loading profile...</p>
+
+  } @else if (notFound()) {
+
+    <div class="edit-card">
+      <h1>User not found</h1>
+      <a routerLink="/">Back to recipes</a>
+    </div>
+
+  } @else if (profile.error()) {
+
+    <div class="edit-card">
+      <h1>Could not load profile</h1>
+      <button type="button" (click)="profile.reload()">Try again</button>
+    </div>
+
+  } @else if (profile.value(); as user) {
+
+    <div class="edit-card">
+
+      <h1>Edit Profile</h1>
+
+      <p class="edit-username">
+        Username: <strong>{{ user.username }}</strong>
+      </p>
+
+      <form (submit)="submit($event)">
+
+        <div class="edit-field">
+          <label for="region">Region</label>
+          <input
+            id="region"
+            type="text"
+            [formField]="form.region"
+          />
+
+          @if (form.region().touched()) {
+            @for (error of form.region().errors(); track $index) {
+              <p class="edit-error">{{ error.message }}</p>
+            }
+          }
+        </div>
+
+        <div class="edit-field">
+          <label for="biography">Biography</label>
+          <textarea
+            id="biography"
+            rows="5"
+            [formField]="form.biography"
+          ></textarea>
+
+          @if (form.biography().touched()) {
+            @for (error of form.biography().errors(); track $index) {
+              <p class="edit-error">{{ error.message }}</p>
+            }
+          }
+        </div>
+
+        <div class="edit-field">
+          <label for="profilePictureUrl">Profile Picture URL</label>
+          <input
+            id="profilePictureUrl"
+            type="text"
+            [formField]="form.profilePictureUrl"
+            placeholder="https://example.com/photo.jpg"
+          />
+
+          @if (form.profilePictureUrl().touched()) {
+            @for (error of form.profilePictureUrl().errors(); track $index) {
+              <p class="edit-error">{{ error.message }}</p>
+            }
+          }
+        </div>
+
+        @if (saveError()) {
+          <p class="edit-error" role="alert">{{ saveError() }}</p>
+        }
+
+        <div class="edit-actions">
+          <button
+            class="save-button"
+            type="submit"
+            [disabled]="!form().valid() || pending()"
+          >
+            {{ pending() ? 'Saving...' : 'Save Changes' }}
+          </button>
+
+          <a class="cancel-link" [routerLink]="['/users', id()]">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+
+  }
+
+</section>

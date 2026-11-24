@@ -48,6 +48,10 @@
           <p class="profile-region">
             <strong>Region:</strong> {{ user.region }}
           </p>
+          <a class="edit-profile-link" [routerLink]="['/users', user.id, 'edit']">
+            Edit Profile
+          </a>
+
         </div>
 
       </div>

@@ -1,22 +1,24 @@
-// Angularov nacin za ucitavanje HTTP podataka
-import { httpResource } from '@angular/common/http';
-// Podrska za ubacivanje zavisnosti
-import { Injectable, type Signal } from '@angular/core';
-// Obican napsani fajl iz kojeg se cita localhost:port
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Injectable, inject, type Signal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../env/environment';
-// Fajl za podatke o useru
-import type { UserProfileData } from './user.model';
+import type { UpdateUserProfileData, UserProfileData } from './user.model';
 
-// Servis za ubacivanje zavisnosti u aplikaciji
 @Injectable({ providedIn: 'root' })
 export class UserService {
 
-  // Signal tekstualne vrednosti
-  loadProfile(id: Signal<string>) {
+  private readonly http = inject(HttpClient);
 
-    // Vraca http resurs, koji ocekuje podatke oblika UserProfileData
+  loadProfile(id: Signal<string>) {
     return httpResource<UserProfileData>(
       () => `${environment.apiHost}/api/users/${id()}`
+    );
+  }
+
+  updateProfile(id: string, data: UpdateUserProfileData): Observable<UserProfileData> {
+    return this.http.put<UserProfileData>(
+      `${environment.apiHost}/api/users/${id}`,
+      data
     );
   }
 }

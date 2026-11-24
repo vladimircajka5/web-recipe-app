@@ -40,9 +40,12 @@ public class RecipeServiceImpl implements IRecipeService {
         if (found.isEmpty()) {
             return null;
         }
+        
+        Recipe recipe = found.get();
+        Double averageRating = recipeRepository.findAverageRatingByRecipeId(recipeId);
 
         // OK
-        return new RecipeDto(found.get());
+        return new RecipeDto(recipe,averageRating);
     }
 
     @Override
@@ -59,11 +62,15 @@ public class RecipeServiceImpl implements IRecipeService {
     }
 
     private List<RecipeDto> convertToDtoList(List<Recipe> recipes) {
-
         List<RecipeDto> result = new ArrayList<>();
+        
+        if(recipes.isEmpty()) {
+        	return result;
+        }
 
         for (Recipe recipe : recipes) {
-            result.add(new RecipeDto(recipe));
+            Double averageRating = recipeRepository.findAverageRatingByRecipeId(recipe.getId());
+            result.add(new RecipeDto(recipe, averageRating));
         }
 
         return result;

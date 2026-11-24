@@ -26,8 +26,9 @@ public class RecipeDto {
     private String mainPhotoUrl;
     private LocalDateTime creationDate;
     private String originStory;
+    private final Double averageRating;
 
-    public RecipeDto(Recipe recipe) {
+    public RecipeDto(Recipe recipe, Double averageRating) {
         this.id = recipe.getId();
         this.name = recipe.getName();
         this.description = recipe.getDescription();
@@ -49,6 +50,8 @@ public class RecipeDto {
         this.mainPhotoUrl = recipe.getMainPhotoUrl();
         this.creationDate = recipe.getCreationDate();
         this.originStory = recipe.getOriginStory();
+        
+        this.averageRating = averageRating;
     }
 
     public Long getId() {
@@ -113,5 +116,9 @@ public class RecipeDto {
 
     public String getOriginStory() {
         return originStory;
+    }
+    
+    public Double getAverageRating() {
+        return averageRating;
     }
 }

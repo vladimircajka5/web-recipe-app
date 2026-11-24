@@ -13,4 +13,6 @@ public interface IRecipeService {
     List<RecipeDto> findByAuthorId(Long userId);
     
     List<RecipeDto> getNewest();
+    
+    List<RecipeDto> getPopular();
 }

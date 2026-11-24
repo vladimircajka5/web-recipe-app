@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,5 +73,11 @@ public class RecipeServiceImpl implements IRecipeService {
     public List<RecipeDto> getNewest() {
         Sort newestFirst = Sort.by(Sort.Direction.DESC, "creationDate", "id");
         return convertToDtoList(recipeRepository.findAll(newestFirst));
+    }
+    
+    @Override
+    public List<RecipeDto> getPopular() {
+        LocalDateTime now = LocalDateTime.now();
+        return convertToDtoList(recipeRepository.findPopularRecipes(now.minusMonths(1), now));
     }
 }

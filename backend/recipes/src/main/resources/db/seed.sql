@@ -162,4 +162,27 @@ JOIN app_users author ON author.id = recipe.author_id
 WHERE author.username = 'demo_chef'
 ON CONFLICT (recipe_id, user_id) DO NOTHING;
 
+
+UPDATE recipes r
+SET main_photo_url = CASE r.name
+                         WHEN 'Tomato Soup' THEN '/recipe_photos/tomato_soup.jpg'
+                         WHEN 'Vegetable Pasta' THEN '/recipe_photos/vegetable_pasta.jpg'
+                         WHEN 'Chicken and Rice' THEN '/recipe_photos/chicken_rice.jpg'
+                         WHEN 'Fruit Salad' THEN '/recipe_photos/fruit_salad.jpg'
+                         WHEN 'Banana Pancakes' THEN '/recipe_photos/banana_pancakes.jpg'
+    END
+    FROM app_users u
+WHERE r.author_id = u.id
+  AND u.username = 'demo_chef'
+  AND r.main_photo_url IS NULL
+  AND r.name IN (
+    'Tomato Soup',
+    'Vegetable Pasta',
+    'Chicken and Rice',
+    'Fruit Salad',
+    'Banana Pancakes'
+    );
+
+
+
 COMMIT;

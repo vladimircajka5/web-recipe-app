@@ -136,4 +136,30 @@ WHERE u.username = 'demo_chef'
     WHERE r.name = 'Banana Pancakes' AND r.author_id = u.id
 );
 
+-- Demo reviewers for the Popular feed
+INSERT INTO app_users (username, region)
+VALUES ('demo_reviewer_one', 'Novi Sad'),
+       ('demo_reviewer_two', 'Novi Sad')
+ON CONFLICT (username) DO NOTHING;
+
+-- Recent ratings determine the ranking. Older ratings exercise the cutoff.
+INSERT INTO ratings (recipe_id, user_id, rating_value, created_at, updated_at)
+SELECT recipe.id,
+       reviewer.id,
+       sample.score,
+       LOCALTIMESTAMP - sample.days_ago * INTERVAL '1 day',
+       LOCALTIMESTAMP - sample.days_ago * INTERVAL '1 day'
+FROM (VALUES
+    ('Banana Pancakes', 'demo_reviewer_one', 3, 7),
+    ('Banana Pancakes', 'demo_reviewer_two', 5, 45),
+    ('Vegetable Pasta', 'demo_reviewer_one', 3, 14),
+    ('Vegetable Pasta', 'demo_reviewer_two', 4, 3),
+    ('Tomato Soup', 'demo_reviewer_one', 5, 45)
+) AS sample(recipe_name, reviewer_name, score, days_ago)
+JOIN app_users reviewer ON reviewer.username = sample.reviewer_name
+JOIN recipes recipe ON recipe.name = sample.recipe_name
+JOIN app_users author ON author.id = recipe.author_id
+WHERE author.username = 'demo_chef'
+ON CONFLICT (recipe_id, user_id) DO NOTHING;
+
 COMMIT;

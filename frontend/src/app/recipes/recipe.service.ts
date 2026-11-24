@@ -1,9 +1,9 @@
 import { httpResource } from '@angular/common/http';
-import { Service, type Signal } from '@angular/core';
+import { Injectable, type Signal } from '@angular/core';
 import { environment } from '../../env/environment';
 import type { RecipeDetailData, RecipeDto, RecipeFeed } from './recipe.model';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class RecipeService {
   loadFeed(feed: Signal<RecipeFeed>) {
     return httpResource<RecipeDto[]>(() => ({

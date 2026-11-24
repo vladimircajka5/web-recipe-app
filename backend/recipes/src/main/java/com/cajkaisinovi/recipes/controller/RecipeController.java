@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", methods = RequestMethod.GET)
 @RequestMapping("/api/recipes")
 public class RecipeController {
 
@@ -22,16 +23,13 @@ public class RecipeController {
     		@RequestParam(value = "sort", required = false) String sort) {
     	
     	if(sort == null) {
-    		List<RecipeDto> all = this.recipeService.getAll();
-
-            // OK
-            return new ResponseEntity<List<RecipeDto>>(all, HttpStatus.OK);
+            return new ResponseEntity<List<RecipeDto>>(recipeService.getAll(), HttpStatus.OK);
     	}
     	
-    	if("newest".equals(sort)) {
+    	if(sort.equals("newest")) {
     		return new ResponseEntity<List<RecipeDto>>(recipeService.getNewest(), HttpStatus.OK);
     	} 
-    	else if ("popular".equals(sort)) {
+    	else if (sort.equals("popular")) {
     		return new ResponseEntity<List<RecipeDto>>(recipeService.getPopular(), HttpStatus.OK);
     	}
         

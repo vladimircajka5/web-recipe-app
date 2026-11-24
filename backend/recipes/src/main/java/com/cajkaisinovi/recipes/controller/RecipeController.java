@@ -30,6 +30,9 @@ public class RecipeController {
     	
     	if("newest".equals(sort)) {
     		return new ResponseEntity<List<RecipeDto>>(recipeService.getNewest(), HttpStatus.OK);
+    	} 
+    	else if ("popular".equals(sort)) {
+    		return new ResponseEntity<List<RecipeDto>>(recipeService.getPopular(), HttpStatus.OK);
     	}
         
     	return new ResponseEntity<List<RecipeDto>>(HttpStatus.BAD_REQUEST);

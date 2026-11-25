@@ -35,5 +35,23 @@ export class ClassificationService{
         );
     }
 
+    update(
+        group: ClassificationGroup,
+        id: number,
+        data: CreateClassificationData
+    ): Observable<ClassificationData> {
+        return this.http.put<ClassificationData>(
+        `${environment.apiHost}/api/${group}/${id}`,
+        data
+        );
+    }
 
+    remove(
+        group: ClassificationGroup,
+        id: number
+    ): Observable<void> {
+        return this.http.delete<void>(
+        `${environment.apiHost}/api/${group}/${id}`
+        );
+    }
 }

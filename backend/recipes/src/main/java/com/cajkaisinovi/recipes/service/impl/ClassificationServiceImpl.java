@@ -98,6 +98,11 @@ public class ClassificationServiceImpl implements IClassificationService {
         return this.dietaryTypeRepository.findAll();
     }
     
+    
+    
+    // CREATE
+    //____________________________________________________________________________________________
+    
     @Override
     public DietaryType createDietaryType(CreateClassificationDto dto) {
 
@@ -137,6 +142,12 @@ public class ClassificationServiceImpl implements IClassificationService {
         return this.ingredientCategoryRepository.save(ingredientCategory);
     }
     
+    
+    
+    // SEARCH
+    //____________________________________________________________________________________________
+    
+    
     @Override
     public Page<MealType> searchMealTypes(String search,int page,int size,String sortBy,String sortDirection) {
 
@@ -150,6 +161,51 @@ public class ClassificationServiceImpl implements IClassificationService {
 
         // OK
         return this.mealTypeRepository.findByNameContainingIgnoreCase(search.trim(),pageable);
+    }
+    
+    @Override
+    public Page<DishType> searchDishTypes(String search, int page, int size, String sortBy, String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+
+        if (!"id".equals(sortBy)) {
+            sort = sort.and(Sort.by("id"));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // OK
+        return this.dishTypeRepository.findByNameContainingIgnoreCase(search.trim(), pageable);
+    }
+    
+    @Override
+    public Page<DietaryType> searchDietaryTypes(String search, int page, int size, String sortBy, String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+
+        if (!"id".equals(sortBy)) {
+            sort = sort.and(Sort.by("id"));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // OK
+        return this.dietaryTypeRepository.findByNameContainingIgnoreCase(search.trim(), pageable);
+    }
+    
+    @Override
+    public Page<IngredientCategory> searchIngredientCategories(String search, int page, int size,String sortBy, String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+
+        if (!"id".equals(sortBy)) {
+            sort = sort.and(Sort.by("id"));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // OK
+        return this.ingredientCategoryRepository.findByNameContainingIgnoreCase(search.trim(), pageable);
     }
 
 }

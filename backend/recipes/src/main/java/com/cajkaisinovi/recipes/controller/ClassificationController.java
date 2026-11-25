@@ -117,6 +117,113 @@ public class ClassificationController {
     	    return new ResponseEntity<>(new PageResponseDto<>(result),HttpStatus.OK);
     	}
     
+    
+    @GetMapping(value = "/admin/dish-types",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> searchDishTypes(
+	        @RequestParam(name = "search", defaultValue = "") String search,
+	        @RequestParam(name = "page", defaultValue = "0") int page,
+	        @RequestParam(name = "size", defaultValue = "10") int size,
+	        @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+	        @RequestParam(name = "sortDirection", defaultValue = "asc")
+	        String sortDirection) {
+
+	    // BAD_REQUEST
+	    if (page < 0 || size < 1 || size > 100) {
+	        return new ResponseEntity<>(
+	                Map.of("message","Page must be non-negative and size must be between 1 and 100."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (!List.of("id", "name").contains(sortBy)) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Sort field must be id or name."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (!"asc".equalsIgnoreCase(sortDirection)
+	            && !"desc".equalsIgnoreCase(sortDirection)) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Sort direction must be asc or desc."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    Page<DishType> result = this.classificationService.searchDishTypes(search, page, size, sortBy, sortDirection);
+
+	    // OK
+	    return new ResponseEntity<>(new PageResponseDto<>(result),HttpStatus.OK);
+	}
+    
+    @GetMapping(value = "/admin/dietary-types",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> searchDietaryTypes(
+	        @RequestParam(name = "search", defaultValue = "") String search,
+	        @RequestParam(name = "page", defaultValue = "0") int page,
+	        @RequestParam(name = "size", defaultValue = "10") int size,
+	        @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+	        @RequestParam(name = "sortDirection", defaultValue = "asc")
+	        String sortDirection) {
+
+	    // BAD_REQUEST
+	    if (page < 0 || size < 1 || size > 100) {
+	        return new ResponseEntity<>(
+	                Map.of("message","Page must be non-negative and size must be between 1 and 100."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (!List.of("id", "name").contains(sortBy)) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Sort field must be id or name."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (!"asc".equalsIgnoreCase(sortDirection)
+	            && !"desc".equalsIgnoreCase(sortDirection)) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Sort direction must be asc or desc."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    Page<DietaryType> result = this.classificationService.searchDietaryTypes(search, page, size, sortBy, sortDirection);
+
+	    // OK
+	    return new ResponseEntity<>(new PageResponseDto<>(result),HttpStatus.OK);
+	}
+    
+    @GetMapping(value = "/admin/ingredient-categories",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> searchIngredientCategories(
+	        @RequestParam(name = "search", defaultValue = "") String search,
+	        @RequestParam(name = "page", defaultValue = "0") int page,
+	        @RequestParam(name = "size", defaultValue = "10") int size,
+	        @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+	        @RequestParam(name = "sortDirection", defaultValue = "asc")
+	        String sortDirection) {
+
+	    // BAD_REQUEST
+	    if (page < 0 || size < 1 || size > 100) {
+	        return new ResponseEntity<>(
+	                Map.of("message","Page must be non-negative and size must be between 1 and 100."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (!List.of("id", "name").contains(sortBy)) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Sort field must be id or name."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    if (!"asc".equalsIgnoreCase(sortDirection)
+	            && !"desc".equalsIgnoreCase(sortDirection)) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Sort direction must be asc or desc."),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    Page<IngredientCategory> result = this.classificationService.searchIngredientCategories(search, page, size, sortBy, sortDirection);
+
+	    // OK
+	    return new ResponseEntity<>(new PageResponseDto<>(result),HttpStatus.OK);
+	}
+    
+    
     @PostMapping(
     		value = "/meal-types",
     		consumes = MediaType.APPLICATION_JSON_VALUE,

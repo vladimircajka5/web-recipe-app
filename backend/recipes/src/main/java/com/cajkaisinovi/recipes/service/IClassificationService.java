@@ -19,12 +19,16 @@ public interface IClassificationService {
 
     List<DishType> getDishTypes();
     DishType createDishType(CreateClassificationDto dto);
+    Page<DishType> searchDishTypes(String search, int page, int size, String sortBy, String sortDirection);
 
     List<DietaryType> getDietaryTypes();
     DietaryType createDietaryType(CreateClassificationDto dto);
+    Page<DietaryType> searchDietaryTypes(String search, int page, int size, String sortBy, String sortDirection);
+
 
     List<IngredientCategory> getIngredientCategories();
     IngredientCategory createIngredientCategory(CreateClassificationDto dto);
+    Page<IngredientCategory> searchIngredientCategories(String search, int page, int size, String sortBy, String sortDirection);
 
     List<Allergen> getAllergens();
 }

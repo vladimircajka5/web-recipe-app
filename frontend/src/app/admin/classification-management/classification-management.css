@@ -1,0 +1,130 @@
+:host {
+  display: block;
+}
+
+.management-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.management-header a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+h1 {
+  margin: 0.75rem 0 0;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.controls,
+.search-form,
+.pagination,
+.pagination-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.controls,
+.search-form {
+  align-items: end;
+}
+
+.control-field {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.search-field {
+  flex: 1 1 15rem;
+}
+
+input,
+select,
+button {
+  box-sizing: border-box;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+input {
+  width: 100%;
+  min-width: 0;
+}
+
+button {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-button {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  background: #f5e5e7;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.pagination {
+  justify-content: space-between;
+}
+
+.pagination p {
+  margin: 0;
+}

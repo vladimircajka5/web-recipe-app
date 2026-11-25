@@ -13,6 +13,7 @@ import com.cajkaisinovi.recipes.repository.MealTypeRepository;
 import com.cajkaisinovi.recipes.service.IClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.cajkaisinovi.recipes.dto.CreateClassificationDto;
 
 import java.util.List;
 
@@ -39,6 +40,21 @@ public class ClassificationServiceImpl implements IClassificationService {
 
         // OK
         return this.mealTypeRepository.findAll();
+    }
+
+    @Override
+    public MealType createMealType(CreateClassificationDto dto){
+        String name = dto.getName().trim();
+
+        // conflict
+        if (this.mealTypeRepository.existsByNameIgnoreCase(name)) {
+            return null;
+        }
+
+        MealType mealType = new MealType(name);
+
+        // ok
+        return this.mealTypeRepository.save(mealType);
     }
 
     @Override

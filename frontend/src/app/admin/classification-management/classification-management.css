@@ -2,7 +2,8 @@
   display: block;
 }
 
-.management-page {
+.management-page,
+.editor-form {
   display: grid;
   gap: 1.5rem;
 }
@@ -21,7 +22,10 @@ h1 {
 .controls,
 .search-form,
 .pagination,
-.pagination-actions {
+.pagination-actions,
+.form-actions,
+.row-actions,
+.dialog-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -71,6 +75,11 @@ button {
   color: white;
 }
 
+.danger-button {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -84,6 +93,42 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
+.editor-card {
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+}
+
+.editor-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+}
+
+.editor-description {
+  margin: 0 0 1rem;
+  overflow-wrap: anywhere;
+}
+
+.form-error {
+  margin: 0.25rem 0 0;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+.notice {
+  margin: 0;
+  padding: 0.9rem;
+  border-radius: 0.5rem;
+  background: #f5e5e7;
+  color: #7d3440;
+  overflow-wrap: anywhere;
+}
+
+.notice-error {
+  border: 1px solid var(--color-accent);
+}
+
 .table-container {
   overflow-x: auto;
   border: 1px solid var(--color-border);
@@ -93,6 +138,7 @@ a:focus-visible {
 
 table {
   width: 100%;
+  min-width: 28rem;
   border-collapse: collapse;
   text-align: left;
 }
@@ -101,6 +147,10 @@ th,
 td {
   padding: 1rem;
   border-bottom: 1px solid var(--color-border);
+}
+
+td {
+  overflow-wrap: anywhere;
 }
 
 th {
@@ -121,10 +171,50 @@ tbody tr:last-child td {
   background: transparent;
 }
 
+.row-actions {
+  gap: 0.5rem;
+}
+
+.row-actions button {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.9rem;
+}
+
 .pagination {
   justify-content: space-between;
 }
 
 .pagination p {
   margin: 0;
+}
+
+.confirmation-dialog {
+  box-sizing: border-box;
+  width: min(28rem, calc(100vw - 2rem));
+  max-height: 80vh;
+  padding: 1.5rem;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.confirmation-dialog::backdrop {
+  background: rgb(41 37 37 / 35%);
+}
+
+.confirmation-dialog h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.confirmation-dialog p {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.dialog-actions {
+  justify-content: flex-end;
+  margin-top: 1.5rem;
 }

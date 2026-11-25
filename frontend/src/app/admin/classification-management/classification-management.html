@@ -4,6 +4,14 @@
     <h1>Manage types and categories</h1>
   </header>
 
+  @if (message()) {
+    <p class="notice" role="status">{{ message() }}</p>
+  }
+
+  @if (actionError()) {
+    <p class="notice notice-error" role="alert">{{ actionError() }}</p>
+  }
+
   <div class="controls">
     <label class="control-field" for="classification-group">
       Group
@@ -11,6 +19,7 @@
         id="classification-group"
         #groupSelect
         [value]="group()"
+        [disabled]="pending()"
         (change)="changeGroup(groupSelect.value)"
       >
         @for (item of groups; track item.value) {
@@ -25,6 +34,7 @@
         id="page-size"
         #sizeSelect
         [value]="query().size"
+        [disabled]="pending()"
         (change)="changeSize(sizeSelect.value)"
       >
         @for (size of pageSizes; track size) {
@@ -33,6 +43,77 @@
       </select>
     </label>
   </div>
+
+  <section class="editor-card" aria-labelledby="editor-heading">
+    <h2 id="editor-heading">
+      {{ editingItem() ? 'Edit item' : 'Add item' }}
+    </h2>
+
+    @if (editingItem(); as item) {
+      <p class="editor-description">
+        Editing: <strong>{{ item.name }}</strong>
+      </p>
+    }
+
+    <form
+      class="editor-form"
+      novalidate
+      (submit)="submitEditor($event)"
+    >
+      <div class="control-field">
+        <label for="classification-name">Name</label>
+
+        <input
+          id="classification-name"
+          #nameInput
+          type="text"
+          [formField]="editorForm.name"
+          aria-describedby="classification-name-errors"
+          (input)="saveError.set(null)"
+        />
+
+        <div id="classification-name-errors">
+          @if (editorForm.name().touched()) {
+            @for (error of editorForm.name().errors(); track $index) {
+              <p class="form-error">{{ error.message }}</p>
+            }
+          }
+
+          @if (saveError()) {
+            <p class="form-error" role="alert">{{ saveError() }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="primary-button"
+          type="submit"
+          [disabled]="
+            pending() ||
+            request.isLoading() ||
+            !editorForm().valid()
+          "
+        >
+          {{
+            pending()
+              ? 'Saving...'
+              : editingItem() ? 'Save changes' : 'Add item'
+          }}
+        </button>
+
+        @if (editingItem()) {
+          <button
+            type="button"
+            [disabled]="pending()"
+            (click)="cancelEdit()"
+          >
+            Cancel editing
+          </button>
+        }
+      </div>
+    </form>
+  </section>
 
   <form class="search-form" (submit)="applySearch($event)">
     <label class="control-field search-field" for="classification-search">
@@ -43,12 +124,19 @@
         type="search"
         maxlength="255"
         [value]="searchText()"
+        [disabled]="pending()"
         (input)="searchText.set(searchInput.value)"
         placeholder="Enter a name"
       />
     </label>
 
-    <button class="primary-button" type="submit">Search</button>
+    <button
+      class="primary-button"
+      type="submit"
+      [disabled]="pending()"
+    >
+      Search
+    </button>
   </form>
 
   @if (request.isLoading()) {
@@ -56,7 +144,13 @@
   } @else if (request.error()) {
     <div role="alert">
       <p>Could not load items.</p>
-      <button type="button" (click)="request.reload()">Try again</button>
+      <button
+        type="button"
+        [disabled]="pending()"
+        (click)="request.reload()"
+      >
+        Try again
+      </button>
     </div>
   } @else if (result(); as data) {
     <div class="table-container">
@@ -67,6 +161,7 @@
               <button
                 class="sort-button"
                 type="button"
+                [disabled]="pending()"
                 (click)="sortBy('id')"
               >
                 ID
@@ -82,6 +177,7 @@
               <button
                 class="sort-button"
                 type="button"
+                [disabled]="pending()"
                 (click)="sortBy('name')"
               >
                 Name
@@ -92,6 +188,8 @@
                 }
               </button>
             </th>
+
+            <th scope="col">Actions</th>
           </tr>
         </thead>
 
@@ -100,10 +198,30 @@
             <tr>
               <td>{{ item.id }}</td>
               <td>{{ item.name }}</td>
+              <td>
+                <div class="row-actions">
+                  <button
+                    type="button"
+                    [disabled]="pending()"
+                    (click)="startEdit(item)"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    class="danger-button"
+                    type="button"
+                    [disabled]="pending()"
+                    (click)="requestDelete(item)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="2">No matching items.</td>
+              <td colspan="3">No matching items.</td>
             </tr>
           }
         </tbody>
@@ -116,7 +234,7 @@
       <div class="pagination-actions" aria-label="Pagination">
         <button
           type="button"
-          [disabled]="data.page === 0"
+          [disabled]="pending() || data.page === 0"
           (click)="changePage(data.page - 1)"
         >
           Previous
@@ -129,7 +247,7 @@
 
         <button
           type="button"
-          [disabled]="data.page + 1 >= data.totalPages"
+          [disabled]="pending() || data.page + 1 >= data.totalPages"
           (click)="changePage(data.page + 1)"
         >
           Next
@@ -138,3 +256,37 @@
     </footer>
   }
 </section>
+
+<dialog
+  #confirmationDialog
+  class="confirmation-dialog"
+  aria-labelledby="confirmation-title"
+  aria-describedby="confirmation-description"
+  (cancel)="cancelConfirmation()"
+>
+  <h2 id="confirmation-title">
+    {{ confirmation()?.kind === 'delete' ? 'Delete item?' : 'Save changes?' }}
+  </h2>
+
+  <p id="confirmation-description">
+    @if (confirmation()?.kind === 'delete') {
+      Delete "{{ confirmation()?.name }}"? This action cannot be undone.
+    } @else {
+      Save the new name "{{ confirmation()?.name }}"?
+    }
+  </p>
+
+  <div class="dialog-actions">
+    <button type="button" autofocus (click)="cancelConfirmation()">
+      Cancel
+    </button>
+
+    <button
+      class="primary-button"
+      type="button"
+      (click)="confirmAction()"
+    >
+      {{ confirmation()?.kind === 'delete' ? 'Delete' : 'Save changes' }}
+    </button>
+  </div>
+</dialog>

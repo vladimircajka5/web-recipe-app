@@ -1,6 +1,7 @@
 package com.cajkaisinovi.recipes.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cajkaisinovi.recipes.domain.Allergen;
 import com.cajkaisinovi.recipes.domain.DietaryType;
@@ -21,6 +23,7 @@ import com.cajkaisinovi.recipes.repository.DishTypeRepository;
 import com.cajkaisinovi.recipes.repository.IngredientCategoryRepository;
 import com.cajkaisinovi.recipes.repository.MealTypeRepository;
 import com.cajkaisinovi.recipes.service.IClassificationService;
+import com.cajkaisinovi.recipes.exception.ClassificationConflictException;
 
 @Service
 public class ClassificationServiceImpl implements IClassificationService {
@@ -45,21 +48,6 @@ public class ClassificationServiceImpl implements IClassificationService {
 
         // OK
         return this.mealTypeRepository.findAll();
-    }
-
-    @Override
-    public MealType createMealType(CreateClassificationDto dto){
-        String name = dto.getName().trim();
-
-        // conflict
-        if (this.mealTypeRepository.existsByNameIgnoreCase(name)) {
-            return null;
-        }
-
-        MealType mealType = new MealType(name);
-
-        // ok
-        return this.mealTypeRepository.save(mealType);
     }
 
     @Override
@@ -104,6 +92,21 @@ public class ClassificationServiceImpl implements IClassificationService {
     //____________________________________________________________________________________________
     
     @Override
+    public MealType createMealType(CreateClassificationDto dto){
+        String name = dto.getName().trim();
+
+        // conflict
+        if (this.mealTypeRepository.existsByNameIgnoreCase(name)) {
+            return null;
+        }
+
+        MealType mealType = new MealType(name);
+
+        // ok
+        return this.mealTypeRepository.save(mealType);
+    }
+
+    @Override
     public DietaryType createDietaryType(CreateClassificationDto dto) {
 
         String name = dto.getName().trim();
@@ -142,7 +145,35 @@ public class ClassificationServiceImpl implements IClassificationService {
         return this.ingredientCategoryRepository.save(ingredientCategory);
     }
     
+    // UPDATE
+    //____________________________________________________________________________________________
     
+    @Override
+    @Transactional
+    public MealType updateMealType(Long id, CreateClassificationDto dto) {
+
+        Optional<MealType> found = this.mealTypeRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return null;
+        }
+
+        String name = dto.getName().trim();
+
+        // CONFLICT
+        if (this.mealTypeRepository.existsByNameIgnoreCaseAndIdNot(name, id)) {
+            throw new ClassificationConflictException(
+                    "Meal type with this name already exists.");
+        }
+
+        MealType mealType = found.get();
+        mealType.setName(name);
+
+        // OK
+        return this.mealTypeRepository.saveAndFlush(mealType);
+    }
+
     
     // SEARCH
     //____________________________________________________________________________________________

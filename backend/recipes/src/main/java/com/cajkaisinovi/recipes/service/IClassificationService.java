@@ -16,7 +16,8 @@ public interface IClassificationService {
     List<MealType> getMealTypes();
     MealType createMealType(CreateClassificationDto dto);
     Page<MealType> searchMealTypes(String search,int page,int size,String sortBy,String sortDirection);
-
+    MealType updateMealType(Long id, CreateClassificationDto dto);
+    
     List<DishType> getDishTypes();
     DishType createDishType(CreateClassificationDto dto);
     Page<DishType> searchDishTypes(String search, int page, int size, String sortBy, String sortDirection);

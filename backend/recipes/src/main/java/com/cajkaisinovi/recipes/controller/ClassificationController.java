@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.cajkaisinovi.recipes.domain.Allergen;
 import com.cajkaisinovi.recipes.domain.DietaryType;
@@ -26,11 +29,17 @@ import com.cajkaisinovi.recipes.domain.MealType;
 import com.cajkaisinovi.recipes.dto.CreateClassificationDto;
 import com.cajkaisinovi.recipes.dto.PageResponseDto;
 import com.cajkaisinovi.recipes.service.IClassificationService;
+import com.cajkaisinovi.recipes.exception.ClassificationConflictException;
 
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "http://localhost:4200", 
+			 methods = {
+					RequestMethod.GET, 
+					RequestMethod.POST,
+					RequestMethod.PUT
+				})
 @RequestMapping("/api")
 public class ClassificationController {
 
@@ -323,4 +332,41 @@ public class ClassificationController {
     	    // CREATED
     	    return new ResponseEntity<>(created, HttpStatus.CREATED);
     	}
+
+
+	@PutMapping(
+		value = "/meal-types/{id}",
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<?> updateMealType(
+			@PathVariable("id") Long id,
+			@Valid @RequestBody CreateClassificationDto dto,
+			BindingResult bindingResult) {
+
+		// BAD_REQUEST
+		if (bindingResult.hasErrors()) {
+			String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+			return new ResponseEntity<>(  Map.of("message", message),HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			MealType updated = this.classificationService.updateMealType(id, dto);
+
+			// NOT_FOUND
+			if (updated == null) {
+				return new ResponseEntity<>(Map.of("message", "Meal type not found."),HttpStatus.NOT_FOUND);
+			}
+
+			// OK
+			return new ResponseEntity<>(updated, HttpStatus.OK);
+
+		} catch (ClassificationConflictException exception) {
+			return new ResponseEntity<>(Map.of("message", exception.getMessage()),HttpStatus.CONFLICT);
+
+		} catch (DataIntegrityViolationException exception) {
+			return new ResponseEntity<>(Map.of("message", "Meal type with this name already exists."),HttpStatus.CONFLICT);
+		}
+	}
 }

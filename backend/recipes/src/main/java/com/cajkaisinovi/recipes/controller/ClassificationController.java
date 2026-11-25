@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.cajkaisinovi.recipes.domain.Allergen;
 import com.cajkaisinovi.recipes.domain.DietaryType;
@@ -38,7 +39,8 @@ import jakarta.validation.Valid;
 			 methods = {
 					RequestMethod.GET, 
 					RequestMethod.POST,
-					RequestMethod.PUT
+					RequestMethod.PUT,
+					RequestMethod.DELETE
 				})
 @RequestMapping("/api")
 public class ClassificationController {
@@ -368,5 +370,29 @@ public class ClassificationController {
 		} catch (DataIntegrityViolationException exception) {
 			return new ResponseEntity<>(Map.of("message", "Meal type with this name already exists."),HttpStatus.CONFLICT);
 		}
+	}
+	
+	@DeleteMapping("/meal-types/{id}")
+	public ResponseEntity<?> deleteMealType(@PathVariable("id") Long id) {
+
+	    try {
+	        boolean deleted = this.classificationService.deleteMealType(id);
+
+	        // NOT_FOUND
+	        if (!deleted) {
+	            return new ResponseEntity<>(Map.of("message", "Meal type not found."),HttpStatus.NOT_FOUND);
+	        }
+
+	        // NO_CONTENT
+	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+	    } catch (ClassificationConflictException exception) {
+	        return new ResponseEntity<>(Map.of("message", exception.getMessage()),HttpStatus.CONFLICT);
+
+	    } catch (DataIntegrityViolationException exception) {
+	        return new ResponseEntity<>(
+	        		Map.of("message","Meal type cannot be deleted because it is in use."),
+	                HttpStatus.CONFLICT);
+	    }
 	}
 }

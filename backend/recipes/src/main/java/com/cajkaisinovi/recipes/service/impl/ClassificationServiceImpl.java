@@ -24,6 +24,7 @@ import com.cajkaisinovi.recipes.repository.IngredientCategoryRepository;
 import com.cajkaisinovi.recipes.repository.MealTypeRepository;
 import com.cajkaisinovi.recipes.service.IClassificationService;
 import com.cajkaisinovi.recipes.exception.ClassificationConflictException;
+import com.cajkaisinovi.recipes.repository.RecipeRepository;
 
 @Service
 public class ClassificationServiceImpl implements IClassificationService {
@@ -42,6 +43,9 @@ public class ClassificationServiceImpl implements IClassificationService {
 
     @Autowired
     private AllergenRepository allergenRepository;
+    
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @Override
     public List<MealType> getMealTypes() {
@@ -175,9 +179,36 @@ public class ClassificationServiceImpl implements IClassificationService {
     }
 
     
+    // DELETE
+    //____________________________________________________________________________________________
+
+    @Override
+    @Transactional
+    public boolean deleteMealType(Long id) {
+
+        Optional<MealType> found = this.mealTypeRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return false;
+        }
+
+        // CONFLICT
+        if (this.recipeRepository.existsByMealTypeId(id)) {
+            throw new ClassificationConflictException(
+                    "Meal type cannot be deleted because it is used by recipes.");
+        }
+
+        this.mealTypeRepository.delete(found.get());
+        this.mealTypeRepository.flush();
+
+        // DELETED
+        return true;
+    }
+    
+    
     // SEARCH
     //____________________________________________________________________________________________
-    
     
     @Override
     public Page<MealType> searchMealTypes(String search,int page,int size,String sortBy,String sortDirection) {

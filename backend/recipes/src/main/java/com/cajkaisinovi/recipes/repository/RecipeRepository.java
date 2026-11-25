@@ -38,4 +38,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             ORDER BY monthly_ratings.monthly_average DESC, recipe.creation_date DESC, recipe.id DESC
             """, nativeQuery = true)
     List<Recipe> findPopularRecipes(@Param("cutoff") LocalDateTime cutoff, @Param("asOf") LocalDateTime asOf);
+
+
+    boolean existsByMealTypeId(Long mealTypeId);
 }

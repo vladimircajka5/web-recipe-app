@@ -1,21 +1,26 @@
 package com.cajkaisinovi.recipes.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import com.cajkaisinovi.recipes.domain.Allergen;
 import com.cajkaisinovi.recipes.domain.DietaryType;
 import com.cajkaisinovi.recipes.domain.DishType;
 import com.cajkaisinovi.recipes.domain.IngredientCategory;
 import com.cajkaisinovi.recipes.domain.MealType;
+import com.cajkaisinovi.recipes.dto.CreateClassificationDto;
 import com.cajkaisinovi.recipes.repository.AllergenRepository;
 import com.cajkaisinovi.recipes.repository.DietaryTypeRepository;
 import com.cajkaisinovi.recipes.repository.DishTypeRepository;
 import com.cajkaisinovi.recipes.repository.IngredientCategoryRepository;
 import com.cajkaisinovi.recipes.repository.MealTypeRepository;
 import com.cajkaisinovi.recipes.service.IClassificationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.cajkaisinovi.recipes.dto.CreateClassificationDto;
-
-import java.util.List;
 
 @Service
 public class ClassificationServiceImpl implements IClassificationService {
@@ -62,6 +67,13 @@ public class ClassificationServiceImpl implements IClassificationService {
 
         // OK
         return this.dishTypeRepository.findAll();
+    }
+    
+    @Override
+    public List<Allergen> getAllergens() {
+
+        // OK
+        return this.allergenRepository.findAll();
     }
     
     @Override
@@ -124,11 +136,20 @@ public class ClassificationServiceImpl implements IClassificationService {
         // ok
         return this.ingredientCategoryRepository.save(ingredientCategory);
     }
-
+    
     @Override
-    public List<Allergen> getAllergens() {
+    public Page<MealType> searchMealTypes(String search,int page,int size,String sortBy,String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection),sortBy);
+
+        if (!"id".equals(sortBy)) {
+            sort = sort.and(Sort.by("id"));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         // OK
-        return this.allergenRepository.findAll();
+        return this.mealTypeRepository.findByNameContainingIgnoreCase(search.trim(),pageable);
     }
+
 }

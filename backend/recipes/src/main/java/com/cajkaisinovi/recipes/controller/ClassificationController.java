@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cajkaisinovi.recipes.domain.Allergen;
@@ -22,6 +24,7 @@ import com.cajkaisinovi.recipes.domain.DishType;
 import com.cajkaisinovi.recipes.domain.IngredientCategory;
 import com.cajkaisinovi.recipes.domain.MealType;
 import com.cajkaisinovi.recipes.dto.CreateClassificationDto;
+import com.cajkaisinovi.recipes.dto.PageResponseDto;
 import com.cajkaisinovi.recipes.service.IClassificationService;
 
 import jakarta.validation.Valid;
@@ -78,6 +81,41 @@ public class ClassificationController {
         // OK
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
+    
+    @GetMapping(value = "/admin/meal-types",produces = MediaType.APPLICATION_JSON_VALUE)
+    	public ResponseEntity<?> searchMealTypes(
+    	        @RequestParam(name = "search", defaultValue = "") String search,
+    	        @RequestParam(name = "page", defaultValue = "0") int page,
+    	        @RequestParam(name = "size", defaultValue = "10") int size,
+    	        @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
+    	        @RequestParam(name = "sortDirection", defaultValue = "asc")
+    	        String sortDirection) {
+
+    	    // BAD_REQUEST
+    	    if (page < 0 || size < 1 || size > 100) {
+    	        return new ResponseEntity<>(
+    	                Map.of("message","Page must be non-negative and size must be between 1 and 100."),
+    	                HttpStatus.BAD_REQUEST);
+    	    }
+
+    	    if (!List.of("id", "name").contains(sortBy)) {
+    	        return new ResponseEntity<>(
+    	                Map.of("message", "Sort field must be id or name."),
+    	                HttpStatus.BAD_REQUEST);
+    	    }
+
+    	    if (!"asc".equalsIgnoreCase(sortDirection)
+    	            && !"desc".equalsIgnoreCase(sortDirection)) {
+    	        return new ResponseEntity<>(
+    	                Map.of("message", "Sort direction must be asc or desc."),
+    	                HttpStatus.BAD_REQUEST);
+    	    }
+
+    	    Page<MealType> result = this.classificationService.searchMealTypes(search, page, size, sortBy, sortDirection);
+
+    	    // OK
+    	    return new ResponseEntity<>(new PageResponseDto<>(result),HttpStatus.OK);
+    	}
     
     @PostMapping(
     		value = "/meal-types",

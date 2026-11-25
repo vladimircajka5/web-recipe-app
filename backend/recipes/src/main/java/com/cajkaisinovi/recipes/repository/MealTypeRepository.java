@@ -4,5 +4,6 @@ import com.cajkaisinovi.recipes.domain.MealType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MealTypeRepository extends JpaRepository<MealType, Long> {
-
+	
+	boolean existsByNameIgnoreCase(String name);
 }

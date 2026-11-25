@@ -178,6 +178,81 @@ public class ClassificationServiceImpl implements IClassificationService {
         return this.mealTypeRepository.saveAndFlush(mealType);
     }
 
+    @Override
+    @Transactional
+    public DishType updateDishType(Long id, CreateClassificationDto dto) {
+
+        Optional<DishType> found = this.dishTypeRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return null;
+        }
+
+        String name = dto.getName().trim();
+
+        // CONFLICT
+        if (this.dishTypeRepository.existsByNameIgnoreCaseAndIdNot(name, id)) {
+            throw new ClassificationConflictException("Dish type with this name already exists.");
+        }
+
+        DishType dishType = found.get();
+        dishType.setName(name);
+
+        // OK
+        return this.dishTypeRepository.saveAndFlush(dishType);
+    }
+    
+    @Override
+    @Transactional
+    public DietaryType updateDietaryType(Long id, CreateClassificationDto dto) {
+
+        Optional<DietaryType> found = this.dietaryTypeRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return null;
+        }
+
+        String name = dto.getName().trim();
+
+        // CONFLICT
+        if (this.dietaryTypeRepository.existsByNameIgnoreCaseAndIdNot(name, id)) {
+            throw new ClassificationConflictException("Dietary type with this name already exists.");
+        }
+
+        DietaryType dietaryType = found.get();
+        dietaryType.setName(name);
+
+        // OK
+        return this.dietaryTypeRepository.saveAndFlush(dietaryType);
+    }
+    
+    @Override
+    @Transactional
+    public IngredientCategory updateIngredientCategory(Long id, CreateClassificationDto dto) {
+
+        Optional<IngredientCategory> found = this.ingredientCategoryRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return null;
+        }
+
+        String name = dto.getName().trim();
+
+        // CONFLICT
+        if (this.ingredientCategoryRepository.existsByNameIgnoreCaseAndIdNot(name, id)) {
+        	throw new ClassificationConflictException("Ingredient Category with this name already exists.");
+        }
+
+        IngredientCategory ingredientCategory= found.get();
+        ingredientCategory.setName(name);
+
+        // OK
+        return this.ingredientCategoryRepository.saveAndFlush(ingredientCategory);
+    }
+    
     
     // DELETE
     //____________________________________________________________________________________________
@@ -205,6 +280,74 @@ public class ClassificationServiceImpl implements IClassificationService {
         // DELETED
         return true;
     }
+    
+    @Override
+    @Transactional
+    public boolean deleteDishType(Long id) {
+
+        Optional<DishType> found = this.dishTypeRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return false;
+        }
+
+        // CONFLICT
+        if (this.recipeRepository.existsByDishTypeId(id)) {
+            throw new ClassificationConflictException(
+                    "Dish type cannot be deleted because it is used by recipes.");
+        }
+
+        this.dishTypeRepository.delete(found.get());
+        this.dishTypeRepository.flush();
+
+        // DELETED
+        return true;
+    }
+    
+    @Override
+    @Transactional
+    public boolean deleteDietaryType(Long id) {
+
+        Optional<DietaryType> found = this.dietaryTypeRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return false;
+        }
+
+        // CONFLICT
+        if (this.recipeRepository.existsByDietaryTypeId(id)) {
+            throw new ClassificationConflictException(
+                    "Dietary type cannot be deleted because it is used by recipes.");
+        }
+
+        this.dietaryTypeRepository.delete(found.get());
+        this.dietaryTypeRepository.flush();
+
+        // DELETED
+        return true;
+    }
+    
+    @Override
+    @Transactional
+    public boolean deleteIngredientCategory(Long id) {
+
+        Optional<IngredientCategory> found =
+                this.ingredientCategoryRepository.findById(id);
+
+        // NOT_FOUND
+        if (found.isEmpty()) {
+            return false;
+        }
+
+        this.ingredientCategoryRepository.delete(found.get());
+        this.ingredientCategoryRepository.flush();
+
+        // DELETED
+        return true;
+    }
+    
     
     
     // SEARCH

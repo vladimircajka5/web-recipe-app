@@ -9,5 +9,6 @@ import com.cajkaisinovi.recipes.domain.IngredientCategory;
 public interface IngredientCategoryRepository extends JpaRepository<IngredientCategory, Long> {
 
 	boolean existsByNameIgnoreCase(String name);
+	boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
 	Page<IngredientCategory> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

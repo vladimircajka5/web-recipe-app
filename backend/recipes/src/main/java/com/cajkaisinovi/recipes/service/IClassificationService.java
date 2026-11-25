@@ -13,24 +13,33 @@ import com.cajkaisinovi.recipes.dto.CreateClassificationDto;
 
 public interface IClassificationService {
 
+	// Meal
     List<MealType> getMealTypes();
     MealType createMealType(CreateClassificationDto dto);
     Page<MealType> searchMealTypes(String search,int page,int size,String sortBy,String sortDirection);
     MealType updateMealType(Long id, CreateClassificationDto dto);
     boolean deleteMealType(Long id);
     
+    // Dish
     List<DishType> getDishTypes();
     DishType createDishType(CreateClassificationDto dto);
     Page<DishType> searchDishTypes(String search, int page, int size, String sortBy, String sortDirection);
-
+    DishType updateDishType(Long id, CreateClassificationDto dto);
+    boolean deleteDishType(Long id);
+    
+    // Dietary
     List<DietaryType> getDietaryTypes();
     DietaryType createDietaryType(CreateClassificationDto dto);
     Page<DietaryType> searchDietaryTypes(String search, int page, int size, String sortBy, String sortDirection);
+    DietaryType updateDietaryType(Long id, CreateClassificationDto dto);
+    boolean deleteDietaryType(Long id);
 
-
+    // Ingredient
     List<IngredientCategory> getIngredientCategories();
     IngredientCategory createIngredientCategory(CreateClassificationDto dto);
     Page<IngredientCategory> searchIngredientCategories(String search, int page, int size, String sortBy, String sortDirection);
+	IngredientCategory updateIngredientCategory(Long id, CreateClassificationDto dto);boolean deleteIngredientCategory(Long id);
 
+	// Allergens
     List<Allergen> getAllergens();
 }

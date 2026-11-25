@@ -9,5 +9,6 @@ import com.cajkaisinovi.recipes.domain.DietaryType;
 public interface DietaryTypeRepository extends JpaRepository<DietaryType, Long> {
 
 	boolean existsByNameIgnoreCase(String name);
+	boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
 	Page<DietaryType> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

@@ -336,6 +336,10 @@ public class ClassificationController {
     	}
 
 
+    //____________________________________________________________________________________________
+    // MEAL TYPES
+    //____________________________________________________________________________________________
+    
 	@PutMapping(
 		value = "/meal-types/{id}",
 		consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -395,4 +399,247 @@ public class ClassificationController {
 	                HttpStatus.CONFLICT);
 	    }
 	}
+	
+
+    //____________________________________________________________________________________________
+    // DISH TYPES
+    //____________________________________________________________________________________________
+	@PutMapping(
+		    value = "/dish-types/{id}",
+		    consumes = MediaType.APPLICATION_JSON_VALUE,
+		    produces = MediaType.APPLICATION_JSON_VALUE
+		)
+	public ResponseEntity<?> updateDishType(
+	        @PathVariable("id") Long id,
+	        @Valid @RequestBody CreateClassificationDto dto,
+	        BindingResult bindingResult) {
+
+	    // BAD_REQUEST
+	    if (bindingResult.hasErrors()) {
+	        String message = bindingResult.getAllErrors()
+	                .get(0)
+	                .getDefaultMessage();
+
+	        return new ResponseEntity<>(
+	                Map.of("message", message),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    try {
+	        DishType updated = this.classificationService.updateDishType(id, dto);
+
+	        // NOT_FOUND
+	        if (updated == null) {
+	            return new ResponseEntity<>(
+	                    Map.of("message", "Dish type not found."),
+	                    HttpStatus.NOT_FOUND);
+	        }
+
+	        // OK
+	        return new ResponseEntity<>(updated, HttpStatus.OK);
+
+	    } catch (ClassificationConflictException exception) {
+	        return new ResponseEntity<>(
+	                Map.of("message", exception.getMessage()),
+	                HttpStatus.CONFLICT);
+
+	    } catch (DataIntegrityViolationException exception) {
+	        return new ResponseEntity<>(
+	                Map.of("message", "Dish type with this name already exists."),
+	                HttpStatus.CONFLICT);
+	    }
+	}
+
+	@DeleteMapping("/dish-types/{id}")
+	public ResponseEntity<?> deleteDishType(@PathVariable("id") Long id) {
+
+	    try {
+	        boolean deleted = this.classificationService.deleteDishType(id);
+
+	        // NOT_FOUND
+	        if (!deleted) {
+	            return new ResponseEntity<>(
+	                    Map.of("message", "Dish type not found."),
+	                    HttpStatus.NOT_FOUND);
+	        }
+
+	        // NO_CONTENT
+	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+	    } catch (ClassificationConflictException exception) {
+	        return new ResponseEntity<>(
+	                Map.of("message", exception.getMessage()),
+	                HttpStatus.CONFLICT);
+
+	    } catch (DataIntegrityViolationException exception) {
+	        return new ResponseEntity<>(
+	                Map.of("message",
+	                        "Dish type cannot be deleted because it is in use."),
+	                HttpStatus.CONFLICT);
+	    }
+	}
+
+	//____________________________________________________________________________________________
+    // DIETARY TYPES
+    //____________________________________________________________________________________________
+	
+	@PutMapping(
+		    value = "/dietary-types/{id}",
+		    consumes = MediaType.APPLICATION_JSON_VALUE,
+		    produces = MediaType.APPLICATION_JSON_VALUE
+		)
+		public ResponseEntity<?> updateDietaryType(
+		        @PathVariable("id") Long id,
+		        @Valid @RequestBody CreateClassificationDto dto,
+		        BindingResult bindingResult) {
+	
+		    // BAD_REQUEST
+		    if (bindingResult.hasErrors()) {
+		        String message = bindingResult.getAllErrors()
+		                .get(0)
+		                .getDefaultMessage();
+	
+		        return new ResponseEntity<>(
+		                Map.of("message", message),
+		                HttpStatus.BAD_REQUEST);
+		    }
+	
+		    try {
+		        DietaryType updated =
+		                this.classificationService.updateDietaryType(id, dto);
+	
+		        // NOT_FOUND
+		        if (updated == null) {
+		            return new ResponseEntity<>(
+		                    Map.of("message", "Dietary type not found."),
+		                    HttpStatus.NOT_FOUND);
+		        }
+	
+		        // OK
+		        return new ResponseEntity<>(updated, HttpStatus.OK);
+	
+		    } catch (ClassificationConflictException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message", exception.getMessage()),
+		                HttpStatus.CONFLICT);
+	
+		    } catch (DataIntegrityViolationException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message",
+		                        "Dietary type with this name already exists."),
+		                HttpStatus.CONFLICT);
+		    }
+		}
+	
+		@DeleteMapping("/dietary-types/{id}")
+		public ResponseEntity<?> deleteDietaryType(@PathVariable("id") Long id) {
+	
+		    try {
+		        boolean deleted = this.classificationService.deleteDietaryType(id);
+	
+		        // NOT_FOUND
+		        if (!deleted) {
+		            return new ResponseEntity<>(
+		                    Map.of("message", "Dietary type not found."),
+		                    HttpStatus.NOT_FOUND);
+		        }
+	
+		        // NO_CONTENT
+		        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	
+		    } catch (ClassificationConflictException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message", exception.getMessage()),
+		                HttpStatus.CONFLICT);
+	
+		    } catch (DataIntegrityViolationException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message",
+		                        "Dietary type cannot be deleted because it is in use."),
+		                HttpStatus.CONFLICT);
+		    }
+		}
+
+	//____________________________________________________________________________________________
+    // INGREDIENT CATEGORIES
+    //____________________________________________________________________________________________
+	
+	@PutMapping(
+		    value = "/ingredient-categories/{id}",
+		    consumes = MediaType.APPLICATION_JSON_VALUE,
+		    produces = MediaType.APPLICATION_JSON_VALUE
+		)
+		public ResponseEntity<?> updateIngredientCategory(
+		        @PathVariable("id") Long id,
+		        @Valid @RequestBody CreateClassificationDto dto,
+		        BindingResult bindingResult) {
+
+		    // BAD_REQUEST
+		    if (bindingResult.hasErrors()) {
+		        String message = bindingResult.getAllErrors()
+		                .get(0)
+		                .getDefaultMessage();
+
+		        return new ResponseEntity<>(
+		                Map.of("message", message),
+		                HttpStatus.BAD_REQUEST);
+		    }
+
+		    try {
+		        IngredientCategory updated =
+		                this.classificationService.updateIngredientCategory(id, dto);
+
+		        // NOT_FOUND
+		        if (updated == null) {
+		            return new ResponseEntity<>(
+		                    Map.of("message", "Ingredient category not found."),
+		                    HttpStatus.NOT_FOUND);
+		        }
+
+		        // OK
+		        return new ResponseEntity<>(updated, HttpStatus.OK);
+
+		    } catch (ClassificationConflictException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message", exception.getMessage()),
+		                HttpStatus.CONFLICT);
+
+		    } catch (DataIntegrityViolationException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message",
+		                        "Ingredient category with this name already exists."),
+		                HttpStatus.CONFLICT);
+		    }
+		}
+
+		@DeleteMapping("/ingredient-categories/{id}")
+		public ResponseEntity<?> deleteIngredientCategory(
+		        @PathVariable("id") Long id) {
+
+		    try {
+		        boolean deleted =
+		                this.classificationService.deleteIngredientCategory(id);
+
+		        // NOT_FOUND
+		        if (!deleted) {
+		            return new ResponseEntity<>(
+		                    Map.of("message", "Ingredient category not found."),
+		                    HttpStatus.NOT_FOUND);
+		        }
+
+		        // NO_CONTENT
+		        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+		    } catch (ClassificationConflictException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message", exception.getMessage()),
+		                HttpStatus.CONFLICT);
+
+		    } catch (DataIntegrityViolationException exception) {
+		        return new ResponseEntity<>(
+		                Map.of("message",
+		                        "Ingredient category cannot be deleted because it is in use."),
+		                HttpStatus.CONFLICT);
+		    }
+		}
 }

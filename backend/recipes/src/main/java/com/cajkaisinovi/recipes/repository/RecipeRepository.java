@@ -41,4 +41,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
 
     boolean existsByMealTypeId(Long mealTypeId);
+    boolean existsByDishTypeId(Long dishTypeId);
+    boolean existsByDietaryTypeId(Long dietaryTypeId);
 }

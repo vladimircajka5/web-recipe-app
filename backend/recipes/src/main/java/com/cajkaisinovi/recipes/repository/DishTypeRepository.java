@@ -9,5 +9,6 @@ import com.cajkaisinovi.recipes.domain.DishType;
 public interface DishTypeRepository extends JpaRepository<DishType, Long> {
 	
 	boolean existsByNameIgnoreCase(String name);
+	boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
 	Page<DishType> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

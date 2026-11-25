@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DietaryTypeRepository extends JpaRepository<DietaryType, Long> {
 
+	boolean existsByNameIgnoreCase(String name);
+	
 }

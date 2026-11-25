@@ -63,6 +63,21 @@ public class ClassificationServiceImpl implements IClassificationService {
         // OK
         return this.dishTypeRepository.findAll();
     }
+    
+    @Override
+	public DishType createDishType(CreateClassificationDto dto) {
+		String name = dto.getName().trim();
+		
+		// conflict
+		if (this.dishTypeRepository.existsByNameIgnoreCase(name)) {
+			return null;
+		}
+		
+		DishType dishType = new DishType(name);
+		
+		// ok
+		return this.dishTypeRepository.save(dishType);
+	}
 
     @Override
     public List<DietaryType> getDietaryTypes() {
@@ -70,12 +85,44 @@ public class ClassificationServiceImpl implements IClassificationService {
         // OK
         return this.dietaryTypeRepository.findAll();
     }
+    
+    @Override
+    public DietaryType createDietaryType(CreateClassificationDto dto) {
+
+        String name = dto.getName().trim();
+
+        // conflict
+        if (this.dietaryTypeRepository.existsByNameIgnoreCase(name)) {
+            return null;
+        }
+
+        DietaryType dietaryType = new DietaryType(name);
+        
+        // ok
+        return this.dietaryTypeRepository.save(dietaryType);
+    }
 
     @Override
     public List<IngredientCategory> getIngredientCategories() {
 
         // OK
         return this.ingredientCategoryRepository.findAll();
+    }
+    
+    @Override
+    public IngredientCategory createIngredientCategory(CreateClassificationDto dto) {
+
+        String name = dto.getName().trim();
+
+        // conflict
+        if (this.ingredientCategoryRepository.existsByNameIgnoreCase(name)) {
+            return null;
+        }
+
+        IngredientCategory ingredientCategory = new IngredientCategory(name);
+
+        // ok
+        return this.ingredientCategoryRepository.save(ingredientCategory);
     }
 
     @Override

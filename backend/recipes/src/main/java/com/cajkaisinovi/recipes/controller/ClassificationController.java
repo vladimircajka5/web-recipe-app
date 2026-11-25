@@ -43,29 +43,6 @@ public class ClassificationController {
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
-    @PostMapping(
-    		value = "/meal-types",
-    		consumes = MediaType.APPLICATION_JSON_VALUE,
-    		produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<?> createMealType(@Valid @RequestBody CreateClassificationDto dto, BindingResult bindingResult){
-    	// BAD REQUEST
-    	if (bindingResult.hasErrors()) {
-    		String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
-    	
-    		return new ResponseEntity<>(Map.of("message", message), HttpStatus.BAD_REQUEST);
-    	}
-    	
-    	MealType created = this.classificationService.createMealType(dto);
-    	
-    	//CONFLICT
-    	if (created == null) {
-    		return new ResponseEntity<>(Map.of("message", "MealType already exists"), HttpStatus.CONFLICT);
-    	}
-    	
-    	// CREATED
-    	return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
     @GetMapping(value = "/dish-types", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DishType>> getDishTypes() {
 
@@ -101,4 +78,104 @@ public class ClassificationController {
         // OK
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
+    
+    @PostMapping(
+    		value = "/meal-types",
+    		consumes = MediaType.APPLICATION_JSON_VALUE,
+    		produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> createMealType(@Valid @RequestBody CreateClassificationDto dto, BindingResult bindingResult){
+    	// BAD REQUEST
+    	if (bindingResult.hasErrors()) {
+    		String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+    	
+    		return new ResponseEntity<>(Map.of("message", message), HttpStatus.BAD_REQUEST);
+    	}
+    	
+    	MealType created = this.classificationService.createMealType(dto);
+    	
+    	//CONFLICT
+    	if (created == null) {
+    		return new ResponseEntity<>(Map.of("message", "MealType already exists"), HttpStatus.CONFLICT);
+    	}
+    	
+    	// CREATED
+    	return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+    
+    @PostMapping(
+    	    value = "/dish-types",
+    	    consumes = MediaType.APPLICATION_JSON_VALUE,
+    	    produces = MediaType.APPLICATION_JSON_VALUE
+    	)
+    	public ResponseEntity<?> createDishType(@Valid @RequestBody CreateClassificationDto dto,BindingResult bindingResult) {
+    	    // BAD_REQUEST
+    	    if (bindingResult.hasErrors()) {
+    	        String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+    	        return new ResponseEntity<>(Map.of("message", message), HttpStatus.BAD_REQUEST);
+    	    }
+
+    	    DishType created = this.classificationService.createDishType(dto);
+
+    	    // CONFLICT
+    	    if (created == null) {
+    	        return new ResponseEntity<>(Map.of("message", "Dish type with this name already exists."),HttpStatus.CONFLICT);
+    	    }
+
+    	    // CREATED
+    	    return new ResponseEntity<>(created, HttpStatus.CREATED);
+    	}
+    
+    @PostMapping(
+    	    value = "/dietary-types",
+    	    consumes = MediaType.APPLICATION_JSON_VALUE,
+    	    produces = MediaType.APPLICATION_JSON_VALUE
+    	)
+    	public ResponseEntity<?> createDietaryType(@Valid @RequestBody CreateClassificationDto dto,BindingResult bindingResult) {
+    	    // BAD_REQUEST
+    	    if (bindingResult.hasErrors()) {
+    	        String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+    	        return new ResponseEntity<>(Map.of("message", message),HttpStatus.BAD_REQUEST);
+    	    }
+
+    	    DietaryType created = this.classificationService.createDietaryType(dto);
+
+    	    // CONFLICT
+    	    if (created == null) {
+    	        return new ResponseEntity<>(
+    	                Map.of("message", "Dietary type with this name already exists."),
+    	                HttpStatus.CONFLICT);
+    	    }
+
+    	    // CREATED
+    	    return new ResponseEntity<>(created, HttpStatus.CREATED);
+    	}
+    
+    @PostMapping(
+    	    value = "/ingredient-categories",
+    	    consumes = MediaType.APPLICATION_JSON_VALUE,
+    	    produces = MediaType.APPLICATION_JSON_VALUE
+    	)
+    	public ResponseEntity<?> createIngredientCategory(@Valid @RequestBody CreateClassificationDto dto,BindingResult bindingResult) {
+    	    // BAD_REQUEST
+    	    if (bindingResult.hasErrors()) {
+    	        String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+    	        return new ResponseEntity<>(Map.of("message", message),HttpStatus.BAD_REQUEST);
+    	    }
+
+    	    IngredientCategory created = this.classificationService.createIngredientCategory(dto);
+
+    	    // CONFLICT
+    	    if (created == null) {
+    	        return new ResponseEntity<>(
+    	                Map.of("message", "Ingredient category with this name already exists."),
+    	                HttpStatus.CONFLICT);
+    	    }
+
+    	    // CREATED
+    	    return new ResponseEntity<>(created, HttpStatus.CREATED);
+    	}
 }

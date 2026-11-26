@@ -9,4 +9,7 @@ export const routes: Routes = [
   { path: 'recipes/:id', component: RecipeDetail },
   { path: 'users/:id/edit', component: EditProfile },
   { path: 'users/:id', component: UserProfile },
+  { path: 'admin', loadChildren: () =>
+      import('./admin/classification-management/admin-module').then((module) => module.AdminModule),
+  },
 ];

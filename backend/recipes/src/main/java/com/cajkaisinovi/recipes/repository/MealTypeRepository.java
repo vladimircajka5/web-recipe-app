@@ -1,8 +1,14 @@
 package com.cajkaisinovi.recipes.repository;
 
-import com.cajkaisinovi.recipes.domain.MealType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MealTypeRepository extends JpaRepository<MealType, Long> {
+import com.cajkaisinovi.recipes.domain.MealType;
 
+public interface MealTypeRepository extends JpaRepository<MealType, Long> {
+	
+	boolean existsByNameIgnoreCase(String name);
+	boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
+	Page<MealType> findByNameContainingIgnoreCase(String name, Pageable pagable);
 }
